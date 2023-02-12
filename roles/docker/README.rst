@@ -1,7 +1,7 @@
 Docker setup
 ============
 
-Docker setup Ansible role. This role is largely inspired by `Jeff Geerling <https://github.com/geerlingguy/ansible-role-docker>` Docker role, I made my one since I tend to not rely on external projects too much especially when they are quite simple.
+Docker setup Ansible role. This role is largely inspired by `Jeff Geerling <https://github.com/geerlingguy/ansible-role-docker>`_ Docker role, I made my one since I tend to not rely on external projects too much especially when they are quite simple.
 
 Requirements
 ------------
@@ -11,9 +11,9 @@ This role was written for Debian.
 Role Variables
 --------------
 
-Variables can be found in the `default vars <vars/main.yml>`_
+Variables can be found in the `default vars <defaults/main.yml>`_
 
-.. codeblock:: yaml
+..  codeblock:: yaml
     docker_edition: 'ce'
     docker_dependencies:
       - "apt-transport-https"
@@ -30,13 +30,13 @@ Variables can be found in the `default vars <vars/main.yml>`_
 
 Defines Docker flavor to install, dependencies and the packages to install. We don't install the docker-compose binary since compose is include in the Docker command line.
 
-.. codeblock:: yaml
+..  codeblock:: yaml
     docker_users:
       - "syrell"
 
 A list of UNIX users to add to the docker group.
 
-.. codeblock:: yaml
+..  codeblock:: yaml
     docker_daemon_options:
       docker_daemon_options:
         log-opts:
@@ -44,7 +44,7 @@ A list of UNIX users to add to the docker group.
 
 A dictionary listing options to add to the Docker daemon.
 
-.. codeblock:: yaml
+..  codeblock:: yaml
     docker_apt_release_channel: stable
     docker_repo_url: https://download.docker.com/linux
     docker_apt_arch: amd64
@@ -61,7 +61,7 @@ None.
 Example Playbook
 ----------------
 
-.. codeblock:: yaml
+..  codeblock:: yaml
     - name: Install docker
       hosts: all
       roles:
@@ -75,4 +75,4 @@ BSD-3
 Author Information
 ------------------
 
-Role created by `syrell <https://git.syyrell.com/syrell>`
+Role created by `syrell <https://git.syyrell.com/syrell>`_
