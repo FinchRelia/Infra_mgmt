@@ -1,0 +1,51 @@
+- name: Create client configs directories
+  ansible.builtin.file:
+    path: "{{ wireguard_clients_dir }}/{{ item.FriendlyName }}"
+    mode: 0755
+    state: directory
+  register: existing_client_config
+
+- name: Wireguard client keys block
+  block:
+  
+  - name: Generate WireGuard client private and public keys
+    ansible.builtin.shell: |
+      set -o pipefail
+      umask 077 && wg genkey | tee pk | wg pubkey > pubk
+    args:
+      executable: /bin/bash
+      chdir: "{{ wireguard_clients_dir }}/{{ item.FriendlyName }}"
+
+  - name: Read publickey
+    ansible.builtin.slurp:
+      src: "{{ wireguard_clients_dir }}/{{ item.FriendlyName }}/pubk"
+    register: _client_pubkey_value
+
+  - name: Read privatekey
+    ansible.builtin.slurp:
+      src: "{{ wireguard_clients_dir }}/{{ item.FriendlyName }}/pk"
+    register: _privkey_value
+ 
+  - name: Create client config
+    ansible.builtin.template:
+      src: "clients.conf.j2"
+      dest: "{{ wireguard_clients_dir }}/{{ item.FriendlyName }}/{{ item.FriendlyName }}.conf"
+      mode: 0644
+    vars:
+      server_public_key: "{{ _pubkey_value['content'] | b64decode | trim }}"
+      preshared_key: "{{ _pskkey_value['content'] | b64decode | trim }}"
+
+  - name: Download client configs
+    ansible.builtin.fetch:
+      src: "{{ wireguard_clients_dir }}/{{ item.FriendlyName }}.conf"
+      dest: "{{ wireguard_clients_download_dir }}/{{ inventory_hostname }}/"
+      flat: true
+    when: wireguard_download_clients | bool
+
+  - name: Append peer to server config
+    ansible.builtin.blockinfile:
+      dest: "{{ wireguard_dir }}/{{ wireguard_interface }}.conf"
+      block: "{{ lookup('template', 'templates/peer.j2') }}"
+      marker: "### {mark} ANSIBLE MANAGED BLOCK FOR {{ item.FriendlyName }} ###"
+
+  when: existing_client_config.changed == true

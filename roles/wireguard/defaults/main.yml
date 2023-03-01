@@ -1,0 +1,51 @@
+---
+# defaults file for wireguard
+# Directory to store WireGuard configuration on the remote hosts
+wireguard_dir: /etc/wireguard
+wireguard_clients_dir: "{{ wireguard_dir }}/clients"
+
+# Download client configs
+wireguard_clients_download_dir: clients/
+wireguard_download_clients: false
+
+# Download private, public and preshared keys
+wireguard_serverkeys_download_dir: server/
+wireguard_download_serverkeys: false
+
+# Path to Wireguard keys
+wireguard_privatekey_path: "{{ wireguard_dir }}/pk"
+wireguard_publickey_path: "{{ wireguard_dir }}/pubk"
+wireguard_presharedkey_path: "{{ wireguard_dir }}/psk"
+
+# When defined, Ansible will restore wireguard keys (private key, public key, preshared key) from this directory.
+# NOTE: The directory path must end with "/"
+wireguard_restore_serverkeys_dir: ""
+
+# List of packages to install
+wireguard_packages:
+  - wireguard
+
+# The default port WireGuard will listen if not specified otherwise.
+wireguard_port: 51810
+
+# Client destination Hostname
+wireguard_hostname: "{{ inventory_hostname }}"
+
+# The default interface name that wireguard should use if not specified otherwise.
+wireguard_interface: wg0
+
+# Interface to NAT traffic to
+nat_out_interface: eth0
+
+# Base wireguard subnet
+wireguard_address: 10.213.213.0/24
+
+# Defines a keepalive value for peers
+wireguard_keepalive: 0
+
+# List of peers
+wireguard_peers: []
+
+# Add additional forward rule to drop packets to other_interface
+filter_forward: false
+other_interface:

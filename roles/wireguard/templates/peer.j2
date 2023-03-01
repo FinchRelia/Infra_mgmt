@@ -1,0 +1,5 @@
+[peer]
+# peer_{{ item.FriendlyName }}
+PublicKey = {{ _client_pubkey_value['content'] | b64decode | trim }}
+PresharedKey = {{ item.PresharedKey }}
+AllowedIPs = {{ item.Address }}/32

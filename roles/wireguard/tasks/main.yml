@@ -1,0 +1,26 @@
+---
+# tasks file for wireguard
+- name: Init tasks
+  import_tasks: init.yml
+
+- name: Deploy server
+  import_tasks: server.yml
+
+- name: Firewalling
+  import_tasks: firewall.yml
+
+- name: Include Client configs
+  include_tasks: clients.yml
+  loop: "{{ peers | list }}"
+
+- name: Cleanup secrets from memory
+  ansible.builtin.set_fact:
+    _pskkey_value: ""
+    _pubkey_value: ""
+    _privkey_value: ""
+
+- name: Restart wg-quick
+  ansible.builtin.systemd:
+    name: wg-quick@wg0.service
+    enabled: yes
+    state: restarted

@@ -1,0 +1,14 @@
+- name: Create required dirs
+  ansible.builtin.file:
+    path: "{{ item }}"
+    mode: 0755
+    state: directory
+  loop:
+    - "{{ wireguard_dir }}"
+    - "{{ wireguard_clients_dir }}"
+
+- name: Install WireGuard
+  ansible.builtin.apt:
+    name: "{{ wireguard_packages }}"
+    update_cache: true
+    state: present

@@ -1,0 +1,9 @@
+{% for peer in wireguard_peers %}
+- WireGuardPeer:
+  FriendlyName: {{ peer.name }}
+  Address: {{ peer.address }}
+  AllowedIPs: "{{ peer.allowed_ip }}{% if not '/' in peer.allowed_ip %}/32{% endif %}"
+  DNS: "{% if peer.dns is defined %}{{ peer.dns }}{% endif %}"
+  PresharedKey: "{{ _pskkey_value['content'] | b64decode | trim }}"
+  PersistentKeepalive: {{ peer.keepalive | default(wireguard_keepalive) }}
+{% endfor %}

@@ -1,0 +1,6 @@
+---
+# vars file for wireguard
+_wireguard_interface_addr: "{{ ansible_default_ipv4.address | default(ansible_all_ipv4_addresses[0]) }}/{{ ansible_default_ipv4.netmask }}"
+wireguard_server_ip: "{{ wireguard_address | ansible.utils.ipaddr('network') | ansible.utils.ipmath(1) }}"
+wireguard_subnetmask: "{{ wireguard_address | ansible.utils.ipaddr('prefix') }}"
+wireguard_peers_allowed_ips: "{{ ([(_wireguard_interface_addr | ansible.utils.ipaddr('network/prefix'))] + (wireguard_additional_routes | default([]))) | join(\", \") }}"
