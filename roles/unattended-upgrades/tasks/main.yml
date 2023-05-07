@@ -1,0 +1,12 @@
+---
+# tasks file for unattended-upgrades
+
+- name: Check if Postfix is already configured
+  stat:
+    path: /etc/postfix/sasl_passwd.db
+  register: postfix_configured
+
+- import_tasks: postfix.yml
+  when: postfix_configured.stat.exists == false
+
+- import_tasks: unattended-upgrades.yml

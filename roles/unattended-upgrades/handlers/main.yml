@@ -1,0 +1,14 @@
+---
+# handlers file for unattended-upgrades
+
+- name: restart_postfix
+  service:
+    name: postfix
+    state: restarted
+  become: yes
+  
+- name: restart_unattended-upgrades
+  service:
+    name: unattended-upgrades
+    state: restarted
+  become: yes

@@ -1,0 +1,55 @@
+- name: Install postfix and mail client
+  apt:
+    update_cache: true
+    pkg:
+    - bsd-mailx
+    - postfix
+    - libsasl2-modules
+
+- name: Insert postfix main configuration
+  template:
+    src: main.cf.j2
+    dest: /etc/postfix/main.cf
+    backup: true
+  notify: restart_postfix
+  
+- name: Setup credentials
+  template:
+    src: mail_credentials.j2
+    dest: /etc/postfix/sasl_passwd
+    mode: 0600
+
+- name: Generate sasl.db file
+  command: postmap /etc/postfix/sasl_passwd
+
+- name: Delete credentials file
+  file:
+    name: /etc/postfix/sasl_passwd
+    state: absent
+
+- name: SMTP header tasks
+  block:
+  - name: Add custom from header configuration
+    template:
+      src: mail_headers.j2
+      dest: /etc/postfix/smtp_header_checks
+      mode: 0600
+      backup: true
+
+  - name: Add postfix-pcre package
+    apt:
+      name: postfix-pcre
+  when: custom_smtp_header
+
+- name: SMTP masquerade tasks
+  block:
+  - name: Add SMTP masquerade file
+    template:
+      src: mail_generic.j2
+      dest: /etc/postfix/generic
+      mode: 0600
+      backup: true
+
+  - name: Generate generic.db file
+    command: postmap /etc/postfix/generic
+  when: smtp_masquerade

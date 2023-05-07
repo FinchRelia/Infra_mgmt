@@ -1,0 +1,29 @@
+myhostname={{ postfix_hostname }}
+
+smtpd_banner = $myhostname ESMTP $mail_name (Debian/GNU)
+biff = no
+
+# appending .domain is the MUA's job.
+append_dot_mydomain = no
+
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+{% if custom_smtp_header %}smtp_header_checks = pcre:/etc/postfix/smtp_header_checks
+{% endif %}
+{% if smtp_masquerade %}smtp_generic_maps = hash:/etc/postfix/generic
+{% endif %}
+
+relayhost = [{{ relay_servername }}]:{{ smtp_port }}
+smtp_use_tls = yes
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+smtp_sasl_security_options = noanonymous, noplaintext
+smtp_sasl_tls_security_options = noanonymous
+smtp_tls_security_level = encrypt
+
+mynetworks = 127.0.0.0/8
+inet_interfaces = loopback-only
+recipient_delimiter = +
+
+compatibility_level = 2

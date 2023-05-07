@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ -f /var/run/reboot-required ]; then
+    echo "A reboot is required following updates to server `hostname -f` for packages: \n \n $(cat /var/run/reboot-required.pkgs)" | mail -s "Reboot Required" {{ smtp_username }}
+fi

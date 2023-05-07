@@ -1,0 +1,16 @@
+---
+# defaults file for unattended-upgrades
+
+upgrades_sender: "{{ ansible_user }}@{{ ansible_hostname }}.lan"
+postfix_hostname: "{{ ansible_hostname }}.lan"
+smtp_username:
+smtp_password:
+smtp_port: 587
+relay_servername: "{{ smtp_username | regex_search('(?<=@)(.+)\\.[\\w]+$') }}"
+
+custom_smtp_header: false
+from_header:
+from_email:
+smtp_masquerade: false
+
+additional_lists: []
