@@ -1,0 +1,48 @@
+- name: Bootstrap cloned VM
+  community.general.proxmox_kvm:
+    api_user: "{{ proxmox_user }}"
+    api_token_id: "{{ proxmox_token }}"
+    api_token_secret: "{{ proxmox_password }}"
+    api_host: "{{ proxmox_host }}"
+    node: "{{ proxmox_node }}"
+    clone: "{{ proxmox_template }}"
+    name: "{{ vm_name }}"
+    state: present
+
+- name: Update Hardware
+  community.general.proxmox_kvm:
+    api_user: "{{ proxmox_user }}"
+    api_token_id: "{{ proxmox_token }}"
+    api_token_secret: "{{ proxmox_password }}"
+    api_host: "{{ proxmox_host }}"
+    node: "{{ proxmox_node }}"
+    name: "{{ vm_name }}"
+    sockets: "{{ socket_count | default(1) }}"
+    cores: "{{ cpu_count | default(1) }}"
+    memory: "{{ memory_count | default(1024) }}"
+    update: True
+  when: (socket_count is defined and socket_count != 0) or
+        (cpu_count is defined and cpu_count != 0) or
+        (memory_count is defined and memory_count != 0)
+
+- name: Resize disk
+  community.general.proxmox_disk:
+    api_user: "{{ proxmox_user }}"
+    api_token_id: "{{ proxmox_token }}"
+    api_token_secret: "{{ proxmox_password }}"
+    api_host: "{{ proxmox_host }}"
+    name: "{{ vm_name }}"
+    disk: "{{ disk_name }}"
+    size: "{{ disk_size }}"
+    state: resized
+  when: disk_size is defined and disk_size != 0
+
+- name: Launch the VM
+  community.general.proxmox_kvm:
+    api_user: "{{ proxmox_user }}"
+    api_token_id: "{{ proxmox_token }}"
+    api_token_secret: "{{ proxmox_password }}"
+    api_host: "{{ proxmox_host }}"
+    name: "{{ vm_name }}"
+    node: "{{ proxmox_node }}"
+    state: started

@@ -1,0 +1,11 @@
+---
+# defaults file for bootstrap_vm
+proxmox_user: "root@pam"
+proxmox_token: ""
+proxmox_password: ""
+proxmox_host: ""
+proxmox_node: ""
+proxmox_template: ""
+vm_name: "ansible-vm"
+disk_name: "scsi0"
+disk_size: ""

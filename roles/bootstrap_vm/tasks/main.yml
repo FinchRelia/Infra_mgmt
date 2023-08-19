@@ -1,0 +1,19 @@
+---
+# tasks file for bootstrap_vm
+
+- name: Verify required vars are fullfiled
+  assert:
+    that:
+      - "{{ item }} is defined"
+      - "{{ item }} | length > 0"
+    quiet: true
+    fail_msg: "{{ item }} is undefined or null"
+  loop:
+    - proxmox_token
+    - proxmox_password
+    - proxmox_host
+    - proxmox_node
+    - proxmox_template
+
+- import_tasks: init_vm.yml
+  delegate_to: localhost

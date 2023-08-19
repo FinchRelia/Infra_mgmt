@@ -1,0 +1,76 @@
+= VM bootstrap
+
+A simple role de bootstrap a VM instance on a Proxmox node. It is based on community.general Proxmox modules which are quite complete. Therefore, it is quite hard to maintain a role which build on every possibility. Hence, this one focus on cloning a VM from an existing template, allows you to modify some hardware desired parameters (mainly sockets, CPU cores, RAM and drive size) and finally start the VM. Also, you will need to make sure cloud-init related variables are already present on the template you want to use. 
+
+== Requirements
+
+This role was written for Debian (11) and doesn't require root privileges. However, it 
+will need the `+community.general+` collection and two Python libraries you'll have to install using your favorite Python package manager :
+
+- proxmoxer (which enables communication with Proxmox API)
+- requests (for API calls)
+
+== Role Variables
+
+Variables can be found in the link:./defaults/main.yml[default vars file]. Here is a detailed description of each variable:
+
+=== Required variables
+
+- `+proxmox_user+` (str): User used to login to Proxmox
+
+- `+proxmox_token+` (str): User token name
+
+- `+proxmox_password+` (str): User token secret
+
+- `+proxmox_host+` (str): DNS/IP address of Proxmox host
+
+- `+proxmox_node+` (str): Proxmox node name
+
+- `+proxmox_template+` (str): Proxmox template name
+
+- `+vm_name+` (str): Name provided for the new VM 
+
+WARNING: `+vm_name+` must be valid (e.g. no underscores)
+
+=== Additional variables
+
+- `+socket_count+` (int): Number of sockets (defaults to 1 if undefined)
+
+- `+cpu_count+` (int): Number of CPU cores (defaults to 1 if undefined)
+
+- `+memory_count+` (int): RAM amount in MB (defaults to 1024 if undefined)
+
+- `+disk_name+` (str): Main disk name (defaults to scsi0)
+
+- `+disk_size+` (str): Desired size for disk `+disk_name+`
+
+== Dependencies
+
+None.
+
+== Example Playbook
+
+[source,yaml]
+----
+- name: Create a VM
+  hosts: localhost
+  vars:
+    proxmox_user: "root@pam"
+    proxmox_token: "mytoken"
+    proxmox_password: "password"
+    proxmox_host: "pve.example.lan"
+    proxmox_template: "vm-template"
+    proxmox_node: "main-node"
+    vm_name: "ansible-vm"
+
+  roles:
+    - role: 'bootstrap_vm'
+----
+
+== License
+
+BSD-3
+
+== Author Information
+
+Role created by https://git.syyrell.com/syrell[syrell].
