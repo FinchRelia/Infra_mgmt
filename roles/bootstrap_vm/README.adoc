@@ -1,6 +1,6 @@
 = VM bootstrap
 
-A simple role de bootstrap a VM instance on a Proxmox node. It is based on community.general Proxmox modules which are quite complete. Therefore, it is quite hard to maintain a role which build on every possibility. Hence, this one focus on cloning a VM from an existing template, allows you to modify some hardware desired parameters (mainly sockets, CPU cores, RAM and drive size) and finally start the VM. Also, you will need to make sure cloud-init related variables are already present on the template you want to use. 
+A simple role to bootstrap a VM instance on a Proxmox node. It is based on community.general Proxmox modules which are quite complete. Therefore, it is quite hard to maintain a role which build on every possibility. Hence, this one focus on cloning a VM from an existing template, allows you to modify some hardware desired parameters (mainly sockets, CPU cores, RAM and drive size) and finally start the VM. Also, you will need to make sure cloud-init related variables are already present on the template you want to use. 
 
 == Requirements
 
